@@ -49,17 +49,9 @@ export default function SignIn() {
     const token = yield call(axios.get(`https://secure-refuge-14993.herokuapp.com/login?username=${getName}&password=${getPassword}`));
     yield put({type:'SET_TOKEN',token});
   }
-  async function requestSignIn(){
-    const x= await axios.get(`https://secure-refuge-14993.herokuapp.com/login?username=${getName}&password=${getPassword}`)
-    .then((response)=>response.data);
-    console.log(x); 
-  }
-  async function tempOnclick(values){
+  async function requestSignIn(values){
     values.preventDefault();
     setStatus(getStatus=>setStatus(!getStatus));
-    // const token= await requestSignIn().then(
-    //   (temp)=>{setStatus(getStatus=>setStatus(!getStatus));}
-    // );
     await axios.get(`https://secure-refuge-14993.herokuapp.com/login?username=${getName}&password=${getPassword}`)
     .then((res)=>{
       console.log(res,getStatus);
@@ -135,7 +127,7 @@ export default function SignIn() {
               color="primary"
               disabled={getStatus?true:false}
               className={classes.submit}
-              onClick={tempOnclick}
+              onClick={requestSignIn}
             >
               Sign In
             </Button>

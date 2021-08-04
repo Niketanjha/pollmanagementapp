@@ -1,39 +1,37 @@
-function getLocalStorage(){
-    const token=localStorage.getItem("token");
-    if(token==="" || token===null){
-      return " ";
-    }
-    else{
-      console.log(token);
-      return (token); 
-    }
-}
-function getLoginStatus(){
-    const token=localStorage.getItem("token");
-    if(token==="" || token===null){
-        return false;
-    }
-    else{
-        return true; 
-    }
+const intialState={
+    isToken:localStorage.getItem("token")?true:false,
+    token:localStorage.getItem("token")?localStorage.getItem("token"):'',
+    isLoading:false,
+    isSuccess:false,
+    isError:false,
+    data:{}
 }
 
-export function loginStatusReducer(state=getLoginStatus(),action){
+export function loginStatusReducer(state=intialState,action){
     switch(action.type){
-        case "SET_LOGIN_STATUS":
-            state=action.payload;
-            return state;
+        case "LOGIN_REQUEST":{
+            return{
+                ...state,
+                isLoading:true,
+            }
+        }
+        case 'LOGIN_SUCCESS':{
+            return{
+                ...state,
+                isSuccess:true,
+                isLoading:false,
+                data:{
+                    action
+                }
+            }
+        }
+        case 'LOGIN_FAIL':{
+            return{
+                ...state,
+                isError:true
+            }
+        }
         default:
             return state; 
     }
 }
-export function tokenReducer(state=getLocalStorage(),action){
-    switch(action.type){
-        case "SET_TOKEN":
-            state=action.payload;
-            return state;
-        default:
-            return state; 
-    }
-}
- 

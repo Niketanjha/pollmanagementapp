@@ -1,7 +1,7 @@
 import {takeLatest,call,put} from 'redux-saga/effects';
 import axios from 'axios';
 
-export function *watcherSaga(){
+export function* watcherSaga(){
     yield takeLatest("API_CALL_REQUEST",workerSaga);
 }
 
@@ -16,9 +16,9 @@ function *workerSaga(){
     try{
         const response=yield call(loginFunction);
         const loginStatus=response
-        yield put({type:"API_CALL_SUCESS",loginStatus});
+        yield put({type:"LOGIN_SUCCESS",loginStatus});
     }
     catch(error){
-        yield put({type:"API_CALL_FAILURE",error});
+        yield put({type:"LOGIN_FAIL",error});
     }
 }
