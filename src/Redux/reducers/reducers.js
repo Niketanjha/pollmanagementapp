@@ -1,3 +1,13 @@
+export function singlePollReducer(state="",action){
+    switch(action.type){
+        case "SET_ID":
+            state=action.payload;
+            return state;
+        default:
+            return state;
+    }
+}
+
 const intialState={
     isToken:localStorage.getItem("token")?true:false,
     token:localStorage.getItem("token")?localStorage.getItem("token"):'',

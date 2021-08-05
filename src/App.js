@@ -9,13 +9,15 @@ import CreatePoll from './Components/CreatePoll';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import AllPolls from './Components/AllPolls';
+import { ToastContainer } from 'react-toastify';
+import SinglePoll from './Components/SinglePoll';
 
 function App(){
   const loginStatus=useSelector((state)=>state.loginStatusReducer);
-
   return(
     <>
       {loginStatus?<NavBar />:""}
+      <ToastContainer />
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={loginStatus?Dashboard:SignIn} />
@@ -25,6 +27,7 @@ function App(){
           <Route exact path="/login" component={SignIn} />
           <Route exact path="/signup" component={Signup} />
           <Route exact path="/dashboard/newpoll" component={CreatePoll} />
+          <Route exact path="/dashboard/uniquePoll" component={SinglePoll} />
         </Switch>
       </BrowserRouter>
     </>

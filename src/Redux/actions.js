@@ -11,7 +11,9 @@ export const loginRequest=(action)=>{
     return {type:"API_CALL_REQUEST",payload:action}
 }
 
-
+export const setUniqueId=(action)=>{
+    return {type:"SET_ID",payload:action}
+}
 
 export const setLoginStatus=(action)=>{
     return {type:"SET_LOGIN_STATUS", payload:action}

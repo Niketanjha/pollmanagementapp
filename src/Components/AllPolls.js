@@ -6,6 +6,9 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import {setUniqueId} from '../Redux/actions';
 
 const useStyles = makeStyles({
   root: {
@@ -29,6 +32,13 @@ export default function AllPolls() {
   const bull = <span className={classes.bullet}>•</span>;
   
   const [getAllPolls,setAllPolls]=useState([]);
+  const history=useHistory();
+  const dispatch=useDispatch();
+
+  function showOnePoll(uniqueId){
+    dispatch(setUniqueId(uniqueId));
+    // history.push('/dashboard/uniquePoll')
+  }
 
   useEffect(()=>{
     fetchAllPolls();
@@ -45,33 +55,20 @@ export default function AllPolls() {
       return(
         <Card key={element._id} style={{margin:"2%",width:"40%"}} className={classes.root} variant="outlined">
           <CardContent>
-            {/* <Typography className={classes.title} color="textSecondary" gutterBottom>
-            {element.title}
-            </Typography> */}
             <Typography variant="h5" component="h2">
             {element.title}
             </Typography>
             <Typography variant="h6">User Vote</Typography>
-            
               {element.options.map((e)=>{
                 return(
                   <>
-                    
                   <Typography>{e.option} {e.vote}</Typography>
                   </>
                 );
               })}
-            {/* <Typography className={classes.pos} color="textSecondary">
-              adjective
-            </Typography>
-            <Typography variant="body2" component="p">
-              well meaning and kindly.
-              <br />
-              {'"a benevolent smile"'}
-            </Typography> */}
           </CardContent>
-          <CardActions>
-            <Button size="small">Show Poll</Button>
+          <CardActions> 
+            <Button onClick={showOnePoll(element._id)}  size="small">Show Poll</Button>
           </CardActions>
         </Card>    
       );

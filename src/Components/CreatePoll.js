@@ -13,6 +13,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
   
   const useStyles = makeStyles((theme) => ({
     paper: {
@@ -36,10 +38,23 @@ import Container from '@material-ui/core/Container';
 
 export default function CreatePoll(){
     const classes = useStyles();
-
-    const {opt1,opt2,opt3,opt4}=useState();
+    const [getOpt1,setOpt1]=useState();
+    const [getOpt2,setOpt2]=useState();
+    const [getOpt3,setOpt3]=useState();
+    const [getOpt4,setOpt4]=useState();
+    const [getHeading,setHeading]=useState();
+    const history=useHistory();
     async function addNewPoll(){
-        await axios.get(`https://secure-refuge-14993.herokuapp.com/add_poll?title=first%20polll&options=${opt1}____${opt2}____${opt3}____${opt4}`)
+        await axios.get(`https://secure-refuge-14993.herokuapp.com/add_poll?title=${getHeading}%20polll&options=${getOpt1}____${getOpt2}____${getOpt3}____${getOpt4}`)
+        .then((res)=>{
+          if(res.data.error===0){
+            toast("Poll Created");
+            history.push('/dashboard/home');
+          }
+          else{
+            toast("Error in Creating Poll");
+          }
+          console.log(res)});
     }
     return(
         <Container component="main" maxWidth="xs">
@@ -48,7 +63,7 @@ export default function CreatePoll(){
         <Typography component="h1" variant="h5">
           Add a new Pole 
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={(e)=>e.preventDefault()} noValidate>
           <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
               <TextField
@@ -58,8 +73,22 @@ export default function CreatePoll(){
                 required
                 fullWidth
                 id="firstName"
-                label="Option 1"
+                label="Poll 1"
                 autoFocus
+                onChange={(e)=>{setOpt1(e.target.value)}}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                autoComplete="fname"
+                name="firstName"
+                variant="outlined"
+                required
+                fullWidth
+                id="option2"
+                label="Poll 2"
+                autoFocus
+                onChange={(e)=>{setOpt2(e.target.value)}}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -70,20 +99,9 @@ export default function CreatePoll(){
                 required
                 fullWidth
                 id="firstName"
-                label="Option 2"
+                label="Poll 3"
                 autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
-                fullWidth
-                id="firstName"
-                label="Option 3"
-                autoFocus
+                onChange={(e)=>{setOpt3(e.target.value)}}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -92,9 +110,10 @@ export default function CreatePoll(){
                 required
                 fullWidth
                 id="lastName"
-                label="Option 4"
+                label="Poll 4"
                 name="lastName"
                 autoComplete="lname"
+                onChange={(e)=>{setOpt4(e.target.value)}}
               />
             </Grid>
             <Grid item xs={12}>
@@ -105,7 +124,7 @@ export default function CreatePoll(){
                 id="email"
                 label="Heading"
                 name="email"
-                autoComplete="email"
+                onChange={(e)=>setHeading(e.target.value)}
               />
             </Grid>
             
@@ -116,6 +135,7 @@ export default function CreatePoll(){
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={addNewPoll}
           >
             Add Poll
           </Button>
