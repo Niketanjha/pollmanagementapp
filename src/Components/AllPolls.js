@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import {setUniqueId} from '../Redux/actions';
+import {setUniqueId,viewSinglePoll} from '../Redux/actions';
 
 const useStyles = makeStyles({
   root: {
@@ -28,16 +28,16 @@ const useStyles = makeStyles({
 });
 
 export default function AllPolls() {
-  const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
-  
+  const classes = useStyles();  
   const [getAllPolls,setAllPolls]=useState([]);
   const history=useHistory();
   const dispatch=useDispatch();
 
   function showOnePoll(uniqueId){
+    
     dispatch(setUniqueId(uniqueId));
-    // history.push('/dashboard/uniquePoll')
+    dispatch(viewSinglePoll(uniqueId));
+    history.push('/dashboard/uniquePoll')
   }
 
   useEffect(()=>{
@@ -68,7 +68,7 @@ export default function AllPolls() {
               })}
           </CardContent>
           <CardActions> 
-            <Button onClick={showOnePoll(element._id)}  size="small">Show Poll</Button>
+            <Button onClick={()=>showOnePoll(element._id)}  size="small">Show Poll</Button>
           </CardActions>
         </Card>    
       );

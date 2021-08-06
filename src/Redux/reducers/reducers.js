@@ -1,8 +1,28 @@
-export function singlePollReducer(state="",action){
+const intialStateSinglePoll={
+    id:"60d57b0e2ebaad0015c44f4c",
+    viewRequestLoading:false,
+    viewRequestSucess:false,
+    data:{},
+}
+export function singlePollReducer(state=intialStateSinglePoll,action){
     switch(action.type){
-        case "SET_ID":
-            state=action.payload;
-            return state;
+        case "SET_ID":{
+            return {...state,
+                    id:action.payload}
+        }
+        case "VIEW_REQUEST_SUCCESS":{
+            return {...state,
+                    viewRequestLoading:false,
+                    data:action.payload}
+        }
+        case "VIEW_REQUEST_LOADING":{
+            return {...state,
+                    viewRequestLoading:action.payload}
+        }
+        case "VIEW_REQUEST_FAIL":{
+            return {...state,
+                    viewRequestSucess:action.payload}
+        }
         default:
             return state;
     }
