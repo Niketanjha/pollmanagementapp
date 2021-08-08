@@ -40,7 +40,7 @@ export default function SignIn() {
   const [getStatus,setStatus]=useState(false);
   const [getName,setName]=useState();
   const [getPassword,setPassword]=useState();
-  const loginStatus=useSelector((state=>state.loginStatusReducer));
+  const loginStatus=useSelector((state=>state.loginStatusReducer.isSucess));
   const dispatch=useDispatch(); 
   const history=useHistory();
   
@@ -57,7 +57,7 @@ export default function SignIn() {
       console.log(res,getStatus);
       if(res.data.error===0){  
         dispatch(setLoginStatus(true));
-        history.push('/dashboard');
+        history.push('/dashboard/home');
         localStorage.setItem("token",res.data.token);
       }
       else if(res.data.error===1){
@@ -78,7 +78,8 @@ export default function SignIn() {
     // console.log(localStorage.getItem("token"));
   }
   if(loginStatus){
-    history.push('/dashboard')
+    history.push('/dashboard/home')
+    console.log(loginStatus);
     return(
       <>
         You are already login. 

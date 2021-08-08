@@ -1,7 +1,6 @@
 // function* handleLogin(action){
 //     try{
-//         const response=yield call(axiosCall,"get",
-//         `/login?username=${action.payload.name}&password=${action.payload.password}`
+//         const response=yield call(/login?username=${action.payload.name}&password=${action.payload.password}`
 //         );
 //         if(response.data.error === 0) {
 //             localStorage.setItem("token",response.data.token);

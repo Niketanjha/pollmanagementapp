@@ -15,6 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import {useSelector} from 'react-redux';
   
   const useStyles = makeStyles((theme) => ({
     paper: {
@@ -44,6 +45,8 @@ export default function CreatePoll(){
     const [getOpt4,setOpt4]=useState();
     const [getHeading,setHeading]=useState();
     const history=useHistory();
+    const loginStatus=useSelector((state)=>state.loginStatusReducer.isSuccess);
+
     async function addNewPoll(){
         await axios.get(`https://secure-refuge-14993.herokuapp.com/add_poll?title=${getHeading}%20polll&options=${getOpt1}____${getOpt2}____${getOpt3}____${getOpt4}`)
         .then((res)=>{
@@ -56,6 +59,7 @@ export default function CreatePoll(){
           }
           console.log(res)});
     }
+    if(loginStatus){
     return(
         <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -144,4 +148,14 @@ export default function CreatePoll(){
       </div>
     </Container>
     );
+  }
+  else{
+    return(
+        <>
+            <p>You are not logged in. 
+                <a href="/login">Kindly log in</a>
+            </p>
+        </>
+    )
+  }
 }

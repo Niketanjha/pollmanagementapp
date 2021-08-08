@@ -16,15 +16,13 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import GroupIcon from '@material-ui/icons/Group';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 import { useDispatch } from 'react-redux';
 import { setLoginStatus } from '../Redux/actions';
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -90,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MiniDrawer() {
+export default function MiniDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -98,13 +96,14 @@ export default function MiniDrawer() {
   const dispatch=useDispatch();
   const history=useHistory();
 
+
   function getUserName(){
 
   }
-  function logOut(){
+  async function logOut(){
     dispatch(setLoginStatus(false));
-    localStorage.removeItem("token")
-      // history.push('#/login')
+    history?history.push('/dashboard/home'):console.log(history);
+    localStorage.removeItem("token");
   }
 
   const handleDrawerOpen = () => {

@@ -1,7 +1,7 @@
 const intialStateSinglePoll={
     id:"60d57b0e2ebaad0015c44f4c",
     viewRequestLoading:false,
-    viewRequestSucess:false,
+    viewRequestSucess:false,    
     data:{},
 }
 export function singlePollReducer(state=intialStateSinglePoll,action){
@@ -32,7 +32,7 @@ const intialState={
     isToken:localStorage.getItem("token")?true:false,
     token:localStorage.getItem("token")?localStorage.getItem("token"):'',
     isLoading:false,
-    isSuccess:false,
+    isSuccess:localStorage.getItem("token")?true:false,
     isError:false,
     data:{}
 }
@@ -45,6 +45,16 @@ export function loginStatusReducer(state=intialState,action){
                 isLoading:true,
             }
         }
+        case "SET_LOGIN_STATUS":
+            return {
+                ...state,
+                isSuccess:action.payload
+            }
+        case "SET_TOKEN":
+            return{
+                ...state,
+                token:localStorage.getItem("token")
+            }
         case 'LOGIN_SUCCESS':{
             return{
                 ...state,

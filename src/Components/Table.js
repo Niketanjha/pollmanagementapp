@@ -121,7 +121,7 @@ export default function TableAll(props) {
   const [getData,setData]=useState([]); 
 
   const dispatch=useDispatch()
-  const loginStatus=useSelector((state)=>state.loginStatusReducer);
+  const loginStatus=useSelector((state)=>state.loginStatusReducer.isSuccess);
  
   async function getAllUser(){
     await axios.get("https://secure-refuge-14993.herokuapp.com/list_users")
