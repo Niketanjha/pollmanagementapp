@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CardHeader from '@material-ui/core/CardHeader';
 
-
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,7 +39,6 @@ export default function AllPolls() {
 
 
   function showOnePoll(uniqueId){
-    
     dispatch(setUniqueId(uniqueId));
     dispatch(viewSinglePoll(uniqueId));
     history.push('/dashboard/uniquePoll')
@@ -63,9 +61,9 @@ export default function AllPolls() {
           <CardHeader titleTypographyProps={{variant:'h4'}} title={element.title} />
           <CardContent style={{padding:"0% 4% 4% 4%"}}>
           <div style={{display:"flex",justifyContent:"space-between"}}>
-              <Typography style={{marginLeft:"2%"}} variant="h5">Users</Typography>
-              <Typography variant="h6">Votes</Typography>
-            </div>
+            <Typography style={{marginLeft:"2%"}} variant="h5">Users</Typography>
+            <Typography variant="h6">Votes</Typography>
+          </div>
               {element.options.map((e)=>{
                 return(
                   <div style={{margin:"3% 3% 0% 3%",display:"flex",justifyContent:"space-between"}}>

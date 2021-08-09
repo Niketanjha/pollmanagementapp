@@ -13,6 +13,7 @@ export function singlePollReducer(state=intialStateSinglePoll,action){
         case "VIEW_REQUEST_SUCCESS":{
             return {...state,
                     viewRequestLoading:false,
+                    viewRequestSucess:true,
                     data:action.payload}
         }
         case "VIEW_REQUEST_LOADING":{

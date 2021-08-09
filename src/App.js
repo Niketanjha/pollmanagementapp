@@ -28,7 +28,7 @@ function App(){
           <Route exact path="/login" component={SignIn} />
           <Route exact path="/signup" component={Signup} />
           <Route exact path="/dashboard/newpoll" component={CreatePoll} />
-          <Route exact path="/dashboard/uniquePoll" component={SinglePoll} />
+          <Route exact path="/dashboard/uniquePoll/" component={SinglePoll} />
         </Switch>
       </BrowserRouter>
     </>

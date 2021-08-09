@@ -168,7 +168,7 @@ export default function MiniDrawer(props) {
           </a>
           <a href="/dashboard/table" style={{textDecoration:"none",color:"inherit"}}>
             <ListItem button >
-              <ListItemIcon><GroupIcon /></ListItemIcon>
+              <ListItemIcon><GroupIcon/></ListItemIcon>
               <ListItemText primary="All Users" />
             </ListItem>
           </a>
