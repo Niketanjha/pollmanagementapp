@@ -20,6 +20,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import TableHead from '@material-ui/core/TableHead';
 
+import {fetchAllUserRequest,setAllUserLoading} from '../Redux/actions'
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -115,21 +116,22 @@ const useStyles2 = makeStyles({
 export default function TableAll(props) {
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  
-  const [getData,setData]=useState([]); 
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);  
 
   const dispatch=useDispatch()
   const loginStatus=useSelector((state)=>state.loginStatusReducer.isSuccess);
+  const tableLoadingStatus=useSelector((state)=>state.fetchAllUsersReducer.isLoading);
+  const tableData=useSelector((state)=>state.fetchAllUsersReducer.data);
  
-  async function getAllUser(){
-    await axios.get("https://secure-refuge-14993.herokuapp.com/list_users")
-    .then((res)=>{setData(res.data.data);console.log(res.data.data)});
-  }
+  // async function getAllUser(){
+  //   await axios.get("https://secure-refuge-14993.herokuapp.com/list_users")
+  //   .then((res)=>{setData(res.data.data);console.log(res.data.data)});
+  // }
+  
 
   useEffect(()=>{
-      getAllUser();
+    dispatch(setAllUserLoading(true));
+    dispatch(fetchAllUserRequest());
   },[]);
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -156,8 +158,8 @@ export default function TableAll(props) {
           </TableHead>
           <TableBody>
             {(rowsPerPage > 0
-              ? getData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : getData
+              ? tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : tableData
             ).map((row) => (
               <TableRow key={row._id}>
                 <TableCell style={{ width: 200 }} align="center" >
@@ -215,77 +217,3 @@ export default function TableAll(props) {
   }
 }
 
-// import React, {useEffect, useState} from 'react';
-// import axios from 'axios';
-
-// import {useSelector, useDispatch } from 'react-redux';
-
-// import { makeStyles } from '@material-ui/core/styles';
-// import Table from '@material-ui/core/Table';
-// import TableBody from '@material-ui/core/TableBody';
-// import TableCell from '@material-ui/core/TableCell';
-// import TableContainer from '@material-ui/core/TableContainer';
-// import TableHead from '@material-ui/core/TableHead';
-// import TableRow from '@material-ui/core/TableRow';
-// import Paper from '@material-ui/core/Paper';
-
-// const useStyles = makeStyles({
-//   table: {
-//     minWidth: 650,
-//   },
-// });
-
-// export default function TableAll(props) {
-//   const classes = useStyles();
-//   const [getData,setData]=useState([]); 
-
-//   const dispatch=useDispatch()
-//   const loginStatus=useSelector((state)=>state.loginStatusReducer);
- 
-//   async function getAllUser(){
-//     await axios.get("https://secure-refuge-14993.herokuapp.com/list_users")
-//     .then((res)=>{setData(res.data.data);console.log(res.data.data)});
-//   }
-
-//   useEffect(()=>{
-//       getAllUser();
-//   },[]);
-
-//   if(loginStatus){
-//   return (
-//       <TableContainer component={Paper}>
-//         <Table className={classes.table} aria-label="simple table">
-//           <TableHead>
-//             <TableRow>
-//               <TableCell>User Id</TableCell>
-//               <TableCell align="right">Password</TableCell>
-//               <TableCell align="right">Role</TableCell>
-//               <TableCell align="right">Username</TableCell>
-//             </TableRow>
-//           </TableHead>
-//           <TableBody>
-//               {getData.map((row) => (
-//                   <TableRow key={row._id}>
-//                   <TableCell component="th" scope="row">
-//                       {row._id}
-//                   </TableCell>
-//                   <TableCell align="right">{row.username}</TableCell>
-//                   <TableCell align="right">{row.password}</TableCell>
-//                   <TableCell align="right">{row.role}</TableCell>
-//                   </TableRow>
-//               ))}
-//           </TableBody>
-//         </Table>
-//       </TableContainer>
-//     );
-//   }
-//   else{
-//     return(
-//       <>
-//           <p>You are not logged in. 
-//               <a href="/login">Kindly log in</a>
-//           </p>
-//       </>
-//     )
-//   }
-// }

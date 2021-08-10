@@ -1,3 +1,60 @@
+const intialStateAllUsers={
+    data:[],
+    isLoading:false,
+    isSuccess:false,
+    isFail:false
+}
+export function fetchAllUsersReducer(state=intialStateAllPoll,action){
+    switch(action.type){
+        case "FETCH_ALL_USER_REQUEST":{
+            return {...state}
+        }
+        case "SET_USERS_LOADING_TRUE":{
+            return {...state,
+                isLoading:true
+            }
+        }
+        case "ALL_USER_REQUEST_SUCCESS":{
+            console.log(action.payload);
+            return{
+                ...state,
+            isLoading:false,
+            data:action.payload}
+        }
+        default:
+            return {...state}
+    }
+}
+
+
+const intialStateAllPoll={
+    data:[],
+    isLoading:false,
+    isSuccess:false,
+    isFail:false
+}
+export function fetchAllPollReducer(state=intialStateAllPoll,action){
+    switch(action.type){
+        case "FETCH_ALL_POLL_REQUEST":{
+            return {...state}
+        }
+        case "SET_POLL_LOADING_TRUE":{
+            return {...state,
+                isLoading:true
+            }
+        }
+        case "ALL_POLL_REQUEST_SUCCESS":{
+            console.log(action.payload);
+            return{
+                ...state,
+            isLoading:false,
+            data:action.payload}
+        }
+        default:
+            return {...state}
+    }
+}
+
 const intialStateSinglePoll={
     id:"60d57b0e2ebaad0015c44f4c",
     viewRequestLoading:false,
@@ -10,6 +67,9 @@ export function singlePollReducer(state=intialStateSinglePoll,action){
             return {...state,
                     id:action.payload}
         }
+        case "VIEW_POLL_API_REQUEST":{
+            return {...state}
+        }
         case "VIEW_REQUEST_SUCCESS":{
             return {...state,
                     viewRequestLoading:false,
@@ -18,7 +78,9 @@ export function singlePollReducer(state=intialStateSinglePoll,action){
         }
         case "VIEW_REQUEST_LOADING":{
             return {...state,
-                    viewRequestLoading:action.payload}
+                    viewRequestLoading:true,
+                    id:action.payload
+                }
         }
         case "VIEW_REQUEST_FAIL":{
             return {...state,
@@ -40,17 +102,27 @@ const intialState={
 
 export function loginStatusReducer(state=intialState,action){
     switch(action.type){
-        case "LOGIN_REQUEST":{
+        case "LOGIN_LOADING":{
             return{
                 ...state,
                 isLoading:true,
             }
         }
-        case "SET_LOGIN_STATUS":
-            return {
+        case "LOGIN_REQUEST":{
+            return{
                 ...state,
-                isSuccess:action.payload
+                isError:false,
             }
+        }
+
+        // case "SET_LOGIN_FALSE":
+        //     return {
+        //         ...state,
+        //         isLoading:false,
+        //         isSuccess:false
+        //     }
+
+
         case "SET_TOKEN":
             return{
                 ...state,
@@ -61,15 +133,20 @@ export function loginStatusReducer(state=intialState,action){
                 ...state,
                 isSuccess:true,
                 isLoading:false,
-                data:{
-                    action
-                }
+                data:action.payload
             }
+        }
+        case 'LOG_OUT':{
+            return{...state,
+                    isSuccess:false,
+                    isError:false,
+                }
         }
         case 'LOGIN_FAIL':{
             return{
                 ...state,
-                isError:true
+                isError:true,
+                isLoading:false
             }
         }
         default:

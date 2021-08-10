@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState,useEffect } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
-import { viewSinglePoll } from '../Redux/actions';
+import { viewSinglePoll,setViewPollLoading } from '../Redux/actions';
 
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
@@ -15,7 +15,7 @@ import TextField from '@material-ui/core/TextField';
 import EditIcon from '@material-ui/icons/Edit';
 
 import { toast } from 'react-toastify';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 
 import Modal from 'react-bootstrap/Modal'
@@ -32,6 +32,8 @@ export default function SinglePoll(props){
     const history=useHistory();
     const loginStatus=useSelector((state)=>state.loginStatusReducer.isSuccess);
     const [getTitleEditStatus,setTitleEditStatus]=useState(false);
+
+    let data1=useSelector((state)=>state.singlePollReducer.data);
 
     async function editTitleRequest(ev){
         await axios.get(`https://secure-refuge-14993.herokuapp.com/update_poll_title?id=${getId}&title=${ev.target.value}`)
@@ -101,7 +103,7 @@ export default function SinglePoll(props){
         console.log(getId);
     },[])
 
-    let data1=useSelector((state)=>state.singlePollReducer.data);
+    
 
     async function callRequest(id){
         
@@ -112,7 +114,7 @@ export default function SinglePoll(props){
         // }
         //     );
     }
-    console.log("dartaaa",getData);
+    console.log("dartaaa",data1);
     if(loginStatus){
     return(
         <div style={{margin:"8% 5% 5% 10%"}}>
@@ -123,14 +125,14 @@ export default function SinglePoll(props){
                         setTitleEditStatus(false);
                         editTitleRequest(ev);
                     }
-                }} label={getData?.title}/>:getData?.title}>
+                }} label={data1?.title}/>:data1?.title}>
                 </CardHeader>
                 <CardContent>
                     <div style={{display:"flex",justifyContent:"space-between"}}>
                         <Typography style={{marginLeft:"5%"}} variant="h4">options</Typography>
                         <Typography variant="h5">Number of Votes</Typography>
                     </div>
-                        {getData?.options?.map((element,index)=>{
+                        {data1?.options?.map((element,index)=>{
                             return(
                                 <div style={{display:"flex",justifyContent:"space-between",margin:"4%"}}>
                                     <Typography style={{minWidth:"50%"}} variant="h5">{index+1}-{element.option}</Typography>

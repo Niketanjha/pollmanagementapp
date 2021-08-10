@@ -11,7 +11,9 @@ import CardHeader from '@material-ui/core/CardHeader';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {setUniqueId,viewSinglePoll} from '../Redux/actions';
+import {setUniqueId,setAllPollsLoading,fetchAllPolls,setViewPollLoading,viewSinglePoll} from '../Redux/actions';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 
 const useStyles = makeStyles({
   root: {
@@ -32,30 +34,29 @@ const useStyles = makeStyles({
 
 export default function AllPolls() {
   const classes = useStyles();  
-  const [getAllPolls,setAllPolls]=useState([]);
   const history=useHistory();
   const dispatch=useDispatch();
   const loginStatus=useSelector((state)=>state.loginStatusReducer.isSuccess);
-
+  const loadingStatus=useSelector((state=>state.loginStatusReducer.isLoading));
+  const data=useSelector((state=>state.fetchAllPollReducer.data));
 
   function showOnePoll(uniqueId){
-    dispatch(setUniqueId(uniqueId));
+    dispatch(setViewPollLoading(uniqueId));
     dispatch(viewSinglePoll(uniqueId));
     history.push('/dashboard/uniquePoll')
   }
 
   useEffect(()=>{
-    fetchAllPolls();
+      dispatch(setAllPollsLoading(true));
+      dispatch(fetchAllPolls());
   },[]);
-
-  async function fetchAllPolls(){
-      await axios.get("https://secure-refuge-14993.herokuapp.com/list_polls")
-      .then((res)=>{setAllPolls(res.data.data);console.log(res.data.data)})
-  }
+  
   if(loginStatus){
   return (
-    <div style={{margin:"6% 2% 1% 15%",display:"flex",flexWrap:"wrap"}}>
-    {getAllPolls.map((element)=>{
+    <div style={{margin:"8% 2% 1% 15%",display:"flex",flexWrap:"wrap"}}>
+      {loadingStatus?<LinearProgress color="secondary" />:""}
+
+    {data.map((element)=>{
       return(
         <Card key={element._id} style={{margin:"2%",width:"40%"}} className={classes.root} variant="outlined">
           <CardHeader titleTypographyProps={{variant:'h4'}} title={element.title} />

@@ -6,7 +6,7 @@ import TableAll from './Components/Table';
 import NavBar from './Components/NavBar';
 import CreatePoll from './Components/CreatePoll';
 
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {BrowserRouter, Route, Switch, useHistory} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import AllPolls from './Components/AllPolls';
 import { ToastContainer } from 'react-toastify';
@@ -17,9 +17,9 @@ function App(){
   console.log(loginStatus);
   return(
     <>
-      {loginStatus?<NavBar />:""}
       <ToastContainer />
       <BrowserRouter>
+        {loginStatus?<NavBar />:""}
         <Switch>
           <Route exact path="/" component={loginStatus?AllPolls:SignIn} />
           <Route exact path="/dashboard/" component={AllPolls} />

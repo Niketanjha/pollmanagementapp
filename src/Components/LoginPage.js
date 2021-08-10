@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -8,16 +8,16 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
-import axios from 'axios';
-
-import {call,put} from 'redux-saga/effects';
 import { useDispatch, useSelector } from 'react-redux';
-import {setToken,setLoginStatus} from '../Redux/actions'
+import {setLoginLoading} from '../Redux/actions'
 
-import { ToastContainer, toast } from 'react-toastify';
+import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useHistory } from 'react-router-dom';
+
+import {loginRequest} from '../Redux/actions'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -37,45 +37,44 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
-  const [getStatus,setStatus]=useState(false);
-  const [getName,setName]=useState();
-  const [getPassword,setPassword]=useState();
-  const loginStatus=useSelector((state=>state.loginStatusReducer.isSucess));
   const dispatch=useDispatch(); 
   const history=useHistory();
+
+  const [getStatus,setStatus]=useState(false);
+
+
+  const [getName,setName]=useState();
+  const [getPassword,setPassword]=useState();
   
+  const loginStatus=useSelector((state=>state.loginStatusReducer.isSuccess));
+  const loadingStatus=useSelector((state=>state.loginStatusReducer.isLoading));
+  const loginError=useSelector((state=>state.loginStatusReducer.isError));
+  console.log(loginStatus,"loginStatus");
   
-  function *requestLogin(){
-    const token = yield call(axios.get(`https://secure-refuge-14993.herokuapp.com/login?username=${getName}&password=${getPassword}`));
-    yield put({type:'SET_TOKEN',token});
-  }
-  async function requestSignIn(values){
-    values.preventDefault();
-    setStatus(getStatus=>setStatus(!getStatus));
-    await axios.get(`https://secure-refuge-14993.herokuapp.com/login?username=${getName}&password=${getPassword}`)
-    .then((res)=>{
-      console.log(res,getStatus);
-      if(res.data.error===0){  
-        dispatch(setLoginStatus(true));
-        history.push('/dashboard/home');
-        localStorage.setItem("token",res.data.token);
-      }
-      else if(res.data.error===1){
-        console.log(getName,getPassword);
-        toast("Invalid Credentials");
-        setStatus(getStatus=>setStatus(!getStatus));
-      }
-      // dispatch(setToken(res.data.token));
-      
-    })
-    // .then((res)=>{console.log(res,getStatus);localStorage.setItem("token",res.data.token)})
+  useEffect(() =>{
+    if(loginStatus){
+      toast("Login sucessfull");
+      history.push('/dashboard/home');
+    }
     
-    // setStatus(getStatus=>setStatus(!getStatus))
-    // console.log(values.target);
-    // await axios.get("https://secure-refuge-14993.herokuapp.com/login?username=admin&password=admin")
-    // .then((res)=>{console.log(res,getStatus);localStorage.setItem("token",res.data.token)})
-    // .then((getStatus)=>{console.log(getStatus);setStatus(!getStatus);}); 
-    // console.log(localStorage.getItem("token"));
+  },[loginStatus]);
+
+  useEffect(() =>{
+    if (loginError){
+      toast("Invalid Credentials");
+    }
+  },[loginError])
+
+  useEffect(()=>{
+    
+  },[loginStatus,loginError])
+
+
+  function requestSignIn(values){
+    values.preventDefault();
+    dispatch(setLoginLoading(true));
+    dispatch(loginRequest({userName:getName,password:getPassword}));
+    console.log(loginStatus);
   }
   if(loginStatus){
     history.push('/dashboard/home')
@@ -89,9 +88,11 @@ export default function SignIn() {
   else{
     return (
       <Container component="main" maxWidth="sm">
+        {loadingStatus?<LinearProgress color="secondary" />:""}
+
         <CssBaseline />
         <div className={classes.paper}>
-          <ToastContainer />
+          
           <Typography component="h1" variant="h3">
             Sign in
           </Typography>
@@ -126,7 +127,7 @@ export default function SignIn() {
               fullWidth
               variant="contained"
               color="primary"
-              disabled={getStatus?true:false}
+              disabled={loadingStatus?true:false}
               className={classes.submit}
               onClick={requestSignIn}
             >

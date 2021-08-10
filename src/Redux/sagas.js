@@ -1,62 +1,93 @@
 import {takeLatest,call,put,select} from 'redux-saga/effects';
 import axios from 'axios';
-import { setUniqueId } from './actions';
-import { useSelector } from 'react-redux';
-import { viewSinglePoll } from './actions';
-
-// const latestId=useSelector((state)=>state.singlePollReducer.id);
-// const latestId=select();
-
 
 export function* watcherSaga(){
-    yield takeLatest("API_CALL_REQUEST",workerSaga);
-    yield takeLatest("VIEW_REQUEST_SUCCESS",viewPollSaga);
+    yield takeLatest("LOGIN_REQUEST",loginWorkerSaga);
+    yield takeLatest("VIEW_POLL_API_REQUEST",viewPollSaga);
+    yield takeLatest("FETCH_ALL_POLL_REQUEST",allPollSaga);
+    yield takeLatest("FETCH_ALL_USER_REQUEST",allUsersSaga);
 }
+async function requestAllUsers(){
+    const response=await axios.get("https://secure-refuge-14993.herokuapp.com/list_users");
+    console.log(response);
+    return response;
+}
+function* allUsersSaga(){
+    try{
+        const response=yield call(requestAllUsers);
+        if(response.data.error===0){
+            console.log(response.data.data)
+            yield put({type:"ALL_USER_REQUEST_SUCCESS",payload:response.data.data});
+        }
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+
+
+async function requestAllPoll(){
+    const response=await axios.get("https://secure-refuge-14993.herokuapp.com/list_polls");
+    console.log(response);
+    return response;
+}
+
+function* allPollSaga(){
+    try{
+        const response=yield call(requestAllPoll);
+        if(response.data.error===0){
+            console.log(response.data.data)
+            yield put({type:"ALL_POLL_REQUEST_SUCCESS",payload:response.data.data});
+        }
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+
 async function requestSinglePoll(id){
  console.log(id);
  const response= await axios.get(`https://secure-refuge-14993.herokuapp.com/list_poll?id=${id}`)
- console.log(response.data);
  return response.data;
-//  then((response)=>{console.log(response.data);return response.data});
 }
 
 function* viewPollSaga(action){
     try{
         console.log(action.payload);
         const response=yield call(requestSinglePoll,action.payload);
-        console.log(response,"response");
-        // yield put({type:"VIEW_REQUEST_SUCCESS",payload:response})
         if (response) {
-            console.log("before");
             yield put({type:"VIEW_REQUEST_SUCCESS",payload:response.data});
-            console.log("after");
-            // yield put(requestSinglePoll(response.data, action.payload));
           }
     }
     catch(error){
         console.log(error,"error");
-        // yield put({type:"VIEW_REQUEST_FAIL",payload:false});
+        yield put({type:"VIEW_REQUEST_FAIL",payload:false});
     }
 }
 
 
-
-
-
-
-
-function loginFunction(){
-    return axios.get(`https://secure-refuge-14993.herokuapp.com/login?username=admin&password=admin`);
+async function loginFunction(cred){
+    console.log(cred);
+    const response=await axios.get(`https://secure-refuge-14993.herokuapp.com/login?username=${cred.userName}&password=${cred.password}`);
+    console.log(response);
+    return response; 
 }
 
-function *workerSaga(action){
+function *loginWorkerSaga(action){
     try{
-        console.log("The login workersaga")
-        const response=yield call(loginFunction(action.payload));
-        const loginStatus=response
-        yield put({type:"LOGIN_SUCCESS",loginStatus});
+        const response=yield call(loginFunction,action.payload);
+        if(response.data.error===0){
+            console.log(response);
+            localStorage.setItem("token",response.data.token);
+            yield put({type:"LOGIN_SUCCESS",payload:response.data});
+        }
+        else if(response.data.error===1){
+            yield put({type:"LOGIN_FAIL",payload:true});
+        }
+        
     }
     catch(error){
-        yield put({type:"LOGIN_FAIL",error});
+        console.log(error)
+        yield put({type:"LOGIN_FAIL",payload:true});
     }
 }

@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
-import {loginStatusReducer,singlePollReducer} from './reducers';
+import {loginStatusReducer,singlePollReducer,fetchAllPollReducer,fetchAllUsersReducer} from './reducers';
 
 export default combineReducers(
-    {loginStatusReducer,singlePollReducer}
+    {loginStatusReducer,singlePollReducer,fetchAllPollReducer,fetchAllUsersReducer}
 );
