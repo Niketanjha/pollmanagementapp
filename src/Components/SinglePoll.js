@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState,useEffect } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
-import { viewSinglePoll,setViewPollLoading } from '../Redux/actions';
+import { viewSinglePoll,setViewPollLoading,voteRequestLoading,voteCastApiCall} from '../Redux/actions';
 
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
@@ -83,6 +83,9 @@ export default function SinglePoll(props){
     }
 
     async function voteRequest(text){
+        // dispatch(voteRequestLoading());
+        // dispatch(voteCastApiCall({text:text,id:getId}));
+        // callRequest(getId);
         let token=localStorage.getItem("token");
         let headers={access_token:token}
         console.log(text);
@@ -99,20 +102,12 @@ export default function SinglePoll(props){
     }
 
     useEffect(()=>{
-        callRequest(getId);
-        console.log(getId);
     },[])
 
     
-
-    async function callRequest(id){
-        
-        // await axios.get(`https://secure-refuge-14993.herokuapp.com/list_poll?id=${id}`)
-        // .then((res)=>{
-        //         setData(()=>res.data.data);
-        //         console.log(res.data.data)
-        // }
-        //     );
+    function callRequest(id){
+        dispatch(setViewPollLoading());
+        dispatch(viewSinglePoll(id));
     }
     console.log("dartaaa",data1);
     if(loginStatus){
@@ -167,20 +162,6 @@ export default function SinglePoll(props){
                         </div>
                     </CardActions>
             </Card>
-            {/* <Modal show={getModalStatus} onHide={modalClose}>
-                <Modal.Header closeButton>
-                    <Modal.title>Modal heading</Modal.title>
-                </Modal.Header>
-                    
-                <Modal.body>
-                    Body
-                </Modal.body>
-
-                <Modal.footer>
-                    <Button onClick={modalClose}>Update</Button>
-                    <Button onClick={modalClose}>Close</Button>
-                </Modal.footer>
-            </Modal> */}
         </div>
     )}
     else{

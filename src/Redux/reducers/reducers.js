@@ -58,7 +58,8 @@ export function fetchAllPollReducer(state=intialStateAllPoll,action){
 const intialStateSinglePoll={
     id:"60d57b0e2ebaad0015c44f4c",
     viewRequestLoading:false,
-    viewRequestSucess:false,    
+    viewRequestSucess:false,
+    voteRequestSuccess:false,    
     data:{},
 }
 export function singlePollReducer(state=intialStateSinglePoll,action){
@@ -85,6 +86,21 @@ export function singlePollReducer(state=intialStateSinglePoll,action){
         case "VIEW_REQUEST_FAIL":{
             return {...state,
                     viewRequestSucess:action.payload}
+        }
+        case "VOTE_REQUEST_LOADING":{
+            return {
+                ...state,
+                viewRequestLoading:true,
+            }
+        }
+        case "VOTE_REQUEST_API_CALL":{
+            return {...state}
+        }
+        case "VOTE_REQUEST_SUCCESS":{
+            return {...state,
+                    viewRequestLoading:false,
+                    voteRequestSuccess:true,
+                }
         }
         default:
             return state;

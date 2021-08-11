@@ -37,7 +37,7 @@ export default function AllPolls() {
   const history=useHistory();
   const dispatch=useDispatch();
   const loginStatus=useSelector((state)=>state.loginStatusReducer.isSuccess);
-  const loadingStatus=useSelector((state=>state.loginStatusReducer.isLoading));
+  const loadingStatus=useSelector((state=>state.fetchAllPollReducer.isLoading));
   const data=useSelector((state=>state.fetchAllPollReducer.data));
 
   function showOnePoll(uniqueId){
@@ -54,7 +54,7 @@ export default function AllPolls() {
   if(loginStatus){
   return (
     <div style={{margin:"8% 2% 1% 15%",display:"flex",flexWrap:"wrap"}}>
-      {loadingStatus?<LinearProgress color="secondary" />:""}
+      {loadingStatus?<LinearProgress style={{marginTop:'10%'}} color="secondary" />:""}
 
     {data.map((element)=>{
       return(

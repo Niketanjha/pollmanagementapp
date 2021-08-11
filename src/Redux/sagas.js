@@ -6,7 +6,32 @@ export function* watcherSaga(){
     yield takeLatest("VIEW_POLL_API_REQUEST",viewPollSaga);
     yield takeLatest("FETCH_ALL_POLL_REQUEST",allPollSaga);
     yield takeLatest("FETCH_ALL_USER_REQUEST",allUsersSaga);
+    yield takeLatest("VOTE_REQUEST_API_CALL",voteRequestSaga);
 }
+async function voteRequestApiCall(text,id){
+    let token=localStorage.getItem("token");
+    let headers={access_token:token};
+    const response=await axios.post(`https://secure-refuge-14993.herokuapp.com/do_vote?id=${id}&option_text=${text}`,{},{headers:headers})
+    return response; 
+}
+
+function *voteRequestSaga(action){
+    let text=action.payload.text;
+    let id=action.payload.id;
+    console.log(text,id,action);
+    try{
+        const response=yield call(voteRequestApiCall(text,id));
+        if(response.data.error===0){
+            console.log(response.data.data);
+            yield put({type:"VOTE_REQUEST_SUCCESS",payload:true});
+        }
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+
+
 async function requestAllUsers(){
     const response=await axios.get("https://secure-refuge-14993.herokuapp.com/list_users");
     console.log(response);
