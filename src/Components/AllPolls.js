@@ -52,9 +52,11 @@ export default function AllPolls() {
   },[]);
   
   if(loginStatus){
+    console.log(loadingStatus)
   return (
     <div style={{margin:"8% 2% 1% 15%",display:"flex",flexWrap:"wrap"}}>
-      {loadingStatus?<LinearProgress style={{marginTop:'10%'}} color="secondary" />:""}
+              {loadingStatus?<LinearProgress style={{marginTop:"15%"}} color="secondary" />:""}
+
 
     {data.map((element)=>{
       return(

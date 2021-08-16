@@ -19,6 +19,8 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import TableHead from '@material-ui/core/TableHead';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 
 import {fetchAllUserRequest,setAllUserLoading} from '../Redux/actions'
 
@@ -146,6 +148,8 @@ export default function TableAll(props) {
   };
   if(loginStatus){
     return (
+      <div>
+        {tableLoadingStatus?<LinearProgress style={{marginTop:"10%"}} color="secondary" />:""}
       <TableContainer style={{width:"80%",margin:"auto",marginTop:"6%"}} component={Paper}>
         <Table className={classes.table} aria-label="custom pagination table">
           <TableHead>
@@ -204,6 +208,7 @@ export default function TableAll(props) {
           </TableFooter>
         </Table>
       </TableContainer>
+      </div>
     );
   }
   else{

@@ -26,14 +26,20 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export default function SinglePoll(props){
     const dispatch=useDispatch();
     // const data=useSelector((state)=>state.singlePollReducer);
-    const getId= useSelector((state)=>state.singlePollReducer.id);
+    
     const [getData,setData]=useState();
     const [getEditStatus,setEditStatus]=useState(false);
     const history=useHistory();
     const loginStatus=useSelector((state)=>state.loginStatusReducer.isSuccess);
     const [getTitleEditStatus,setTitleEditStatus]=useState(false);
 
+    const [getLoading,setLoading]=useState(false);
+
+    const voteSuccess=useSelector((state)=>state.singlePollReducer.voteRequestSuccess);
+    const voteLoading=useSelector((state)=>state.singlePollReducer.viewRequestLoading);
+
     let data1=useSelector((state)=>state.singlePollReducer.data);
+    const getId= useSelector((state)=>state.singlePollReducer.id);
 
     async function editTitleRequest(ev){
         await axios.get(`https://secure-refuge-14993.herokuapp.com/update_poll_title?id=${getId}&title=${ev.target.value}`)
@@ -83,30 +89,38 @@ export default function SinglePoll(props){
     }
 
     async function voteRequest(text){
-        // dispatch(voteRequestLoading());
-        // dispatch(voteCastApiCall({text:text,id:getId}));
-        // callRequest(getId);
-        let token=localStorage.getItem("token");
-        let headers={access_token:token}
-        console.log(text);
-        await axios.post(`https://secure-refuge-14993.herokuapp.com/do_vote?id=${getId}&option_text=${text}`,{},{headers:headers})
-        .then((res)=>{
-            if(res.data.error==0){
-                toast("Voted Sucessfully");
-                callRequest(getId);
-            }
-            else{
-                toast("Something went wrong")
-            }
-        }).catch((e)=>{toast("Something went wrong");console.log(e)})
+        dispatch(voteRequestLoading());
+        if(voteLoading){
+            setLoading(true);
+        };
+        dispatch(voteCastApiCall({text:text,id:getId}));
+        if(voteSuccess){
+            toast("Voted Sucessfully");
+        }
+        callRequest(getId);
+
+        // let token=localStorage.getItem("token");
+        // let headers={access_token:token}
+        // console.log(text);
+        // await axios.post(`https://secure-refuge-14993.herokuapp.com/do_vote?id=${getId}&option_text=${text}`,{},{headers:headers})
+        // .then((res)=>{
+        //     if(res.data.error==0){
+        //         toast("Voted Sucessfully");
+        //         callRequest(getId);
+        //     }
+        //     else{
+        //         toast("Something went wrong")
+        //     }
+        // }).catch((e)=>{toast("Something went wrong");console.log(e)})
     }
 
     useEffect(()=>{
-    },[])
+        callRequest(getId);
+    },[voteLoading])
 
     
     function callRequest(id){
-        dispatch(setViewPollLoading());
+        dispatch(setViewPollLoading(id));
         dispatch(viewSinglePoll(id));
     }
     console.log("dartaaa",data1);

@@ -9,7 +9,7 @@ export function fetchAllUsersReducer(state=intialStateAllPoll,action){
         case "FETCH_ALL_USER_REQUEST":{
             return {...state}
         }
-        case "SET_USERS_LOADING_TRUE":{
+        case "SET_USER_LOADING_TRUE":{
             return {...state,
                 isLoading:true
             }

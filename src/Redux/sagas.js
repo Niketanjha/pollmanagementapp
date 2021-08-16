@@ -12,6 +12,7 @@ async function voteRequestApiCall(text,id){
     let token=localStorage.getItem("token");
     let headers={access_token:token};
     const response=await axios.post(`https://secure-refuge-14993.herokuapp.com/do_vote?id=${id}&option_text=${text}`,{},{headers:headers})
+    console.log(response);
     return response; 
 }
 
@@ -21,6 +22,7 @@ function *voteRequestSaga(action){
     console.log(text,id,action);
     try{
         const response=yield call(voteRequestApiCall(text,id));
+        console.log(response);
         if(response.data.error===0){
             console.log(response.data.data);
             yield put({type:"VOTE_REQUEST_SUCCESS",payload:true});
