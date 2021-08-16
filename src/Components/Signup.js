@@ -15,6 +15,7 @@ import {Select,FormControl,InputLabel,} from "@material-ui/core";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useHistory } from "react-router-dom";
+import {useSelector} from 'react-redux';
 
 
 
@@ -41,6 +42,8 @@ export default function Signup() {
   const [getRole,setRole]=useState("Guest"); 
   const [getButtonStatus,setButtonStatus]=useState(true);
   const history = useHistory();
+  const loginStatus=useSelector((state)=>state.loginStatusReducer.isSuccess);
+
 
   async function signUp(e){
     e.preventDefault();
@@ -58,7 +61,16 @@ export default function Signup() {
       }
     })
   }
-  
+  if(loginStatus){
+    history.push('/dashboard/home')
+    console.log(loginStatus);
+    return(
+      <>
+        You are already login. 
+      </>
+    );
+  }
+  else{
   return (
     <Container component="main" maxWidth="sm">
       <CssBaseline />
@@ -130,4 +142,5 @@ export default function Signup() {
       </div>
     </Container>
   );
+  }
 }
