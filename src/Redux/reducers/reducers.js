@@ -1,3 +1,5 @@
+import jwt from 'jwt-decode';
+
 const intialStateAllUsers={
     data:[],
     isLoading:false,
@@ -59,7 +61,6 @@ const intialStateSinglePoll={
     id:"60d57b0e2ebaad0015c44f4c",
     viewRequestLoading:false,
     viewRequestSucess:false,
-    voteRequestSuccess:false,    
     data:{},
 }
 export function singlePollReducer(state=intialStateSinglePoll,action){
@@ -110,6 +111,8 @@ export function singlePollReducer(state=intialStateSinglePoll,action){
 const intialState={
     isToken:localStorage.getItem("token")?true:false,
     token:localStorage.getItem("token")?localStorage.getItem("token"):'',
+    role:localStorage.getItem("token")?jwt(localStorage.getItem("token")).role:'',
+    name:localStorage.getItem("token")?jwt(localStorage.getItem("token")).username:'',
     isLoading:false,
     isSuccess:localStorage.getItem("token")?true:false,
     isError:false,
@@ -130,15 +133,6 @@ export function loginStatusReducer(state=intialState,action){
                 isError:false,
             }
         }
-
-        // case "SET_LOGIN_FALSE":
-        //     return {
-        //         ...state,
-        //         isLoading:false,
-        //         isSuccess:false
-        //     }
-
-
         case "SET_TOKEN":
             return{
                 ...state,
@@ -149,7 +143,10 @@ export function loginStatusReducer(state=intialState,action){
                 ...state,
                 isSuccess:true,
                 isLoading:false,
-                data:action.payload
+                data:action.payload,
+                token:action.payload.token,
+                role:jwt(action.payload.token).role,
+                name:jwt(action.payload.token).username,
             }
         }
         case 'LOG_OUT':{

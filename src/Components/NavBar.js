@@ -23,6 +23,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useDispatch } from 'react-redux';
 import { setLogout } from '../Redux/actions';
 import { useHistory,withRouter } from "react-router-dom";
+import { useSelector } from 'react-redux';
 
 
 
@@ -98,13 +99,17 @@ function NavBar(props) {
   const dispatch=useDispatch();
   const history=useHistory();
 
+  const role=useSelector((state)=>state.loginStatusReducer.role);
+  const username=useSelector((state)=>state.loginStatusReducer.name);
+
+
   function logOut(){
     dispatch(setLogout(false));
     // console.log(props,"props");
     props.history.push('/login');
     localStorage.removeItem("token");
   }
-
+  
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -159,28 +164,30 @@ function NavBar(props) {
         </div>
         <Divider />
         <List>
-          <a href="/dashboard/home" style={{textDecoration:"none",color:"inherit"}}>
+          <a href="/dashboard/home/" style={{textDecoration:"none",color:"inherit"}}>
             <ListItem button>
                   <ListItemIcon><HomeIcon /></ListItemIcon>
                   <ListItemText primary="Home" />
             </ListItem>
           </a>
+          {role==="admin"?
           <a href="/dashboard/table" style={{textDecoration:"none",color:"inherit"}}>
             <ListItem button >
               <ListItemIcon><GroupIcon/></ListItemIcon>
               <ListItemText primary="All Users" />
             </ListItem>
-          </a>
+          </a>:''}
           
+          {role==="admin"?
           <a href="/dashboard/newpoll" style={{textDecoration:"none",color:"inherit"}}>
             <ListItem button >
                   <ListItemIcon><PostAddIcon/></ListItemIcon>
                   <ListItemText primary="Add Poll" />
             </ListItem>
-          </a>
+          </a>:''}
           <ListItem button  onClick={logOut} >
                 <ListItemIcon><ExitToAppIcon/></ListItemIcon>
-                <ListItemText primary="Log Out" />
+                <ListItemText primary={`Log Out  (${username})`} />
           </ListItem>
         </List>
       </Drawer>

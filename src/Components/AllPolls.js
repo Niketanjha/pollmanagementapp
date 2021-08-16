@@ -31,6 +31,16 @@ const useStyles = makeStyles({
     marginBottom: 12,
   },
 });
+const user={
+  name:"Rajat",
+  address:{
+    name:'UK',
+    office:{
+      landmark:"nodia",
+      place:"delhi"
+    }
+  }
+}
 
 export default function AllPolls() {
   const classes = useStyles();  
@@ -39,6 +49,67 @@ export default function AllPolls() {
   const loginStatus=useSelector((state)=>state.loginStatusReducer.isSuccess);
   const loadingStatus=useSelector((state=>state.fetchAllPollReducer.isLoading));
   const data=useSelector((state=>state.fetchAllPollReducer.data));
+
+// const string1=[
+//   ["swiggy",123], //177
+//   ["swiggy",227],
+//   ["zomato",103], //132
+//   ["zomato",171],
+//   ["dunzo",131],  //131
+//   ["zomato",122],
+//   ["swiggy",181]
+// ];
+
+// function maxAvg(input){
+//   const dict={};
+//   for(const i in input){
+//     console.log(dict[input[i][0]]);
+//     if(dict[input[i][0]]){
+//       dict[input[i][0]]={...dict[input[i][0]],
+//         times:dict[input[i][0]].times+1,value:dict[input[i][0]].value+input[i][1]}
+//     }
+//     else{
+//       dict[input[i][0]]={times:1,value:input[i][1]}
+//     }
+//     // dict[i[0]]=dict[i[0]];
+//   }
+//   let max=0;
+//   let answer="";
+//   for(const key in dict){
+//     const temp=(dict[key].value)/(dict[key].times);
+//     if(temp>max){
+//       max=temp;
+//       answer=key;
+//     }
+//   }
+//   return answer;
+// }
+// console.log(maxAvg(string1));
+//   function convertData(input){
+//     let final={};
+//     for(const key in input){
+//         if((typeof(input[key]))==="object") {
+//             const temp=convertData(input[key]);
+//             console.log(temp);
+//             for(const obj in temp){
+//               final[key+'_'+obj]=temp[obj];
+//             }
+//         }
+//         else {
+//           final[key]=input[key];
+//         }
+//     }
+//     return final;
+// };
+// function convertUser(final){
+//   const ob={}
+//   for (const i in final){
+//     ob['user_'+i]=final[i]
+//   }
+//   return ob;
+// }  
+// console.log(convertUser(convertData(user)));
+  
 
   function showOnePoll(uniqueId){
     dispatch(setViewPollLoading(uniqueId));

@@ -39,7 +39,8 @@ export default function SinglePoll(props){
     const voteLoading=useSelector((state)=>state.singlePollReducer.viewRequestLoading);
 
     let data1=useSelector((state)=>state.singlePollReducer.data);
-    const getId= useSelector((state)=>state.singlePollReducer.id);
+    const getId=useSelector((state)=>state.singlePollReducer.id);
+    const role=useSelector((state)=>state.loginStatusReducer.role);
 
     async function editTitleRequest(ev){
         await axios.get(`https://secure-refuge-14993.herokuapp.com/update_poll_title?id=${getId}&title=${ev.target.value}`)
@@ -90,41 +91,24 @@ export default function SinglePoll(props){
 
     async function voteRequest(text){
         dispatch(voteRequestLoading());
-        if(voteLoading){
-            setLoading(true);
-        };
         dispatch(voteCastApiCall({text:text,id:getId}));
         if(voteSuccess){
             toast("Voted Sucessfully");
         }
         callRequest(getId);
-
-        // let token=localStorage.getItem("token");
-        // let headers={access_token:token}
-        // console.log(text);
-        // await axios.post(`https://secure-refuge-14993.herokuapp.com/do_vote?id=${getId}&option_text=${text}`,{},{headers:headers})
-        // .then((res)=>{
-        //     if(res.data.error==0){
-        //         toast("Voted Sucessfully");
-        //         callRequest(getId);
-        //     }
-        //     else{
-        //         toast("Something went wrong")
-        //     }
-        // }).catch((e)=>{toast("Something went wrong");console.log(e)})
     }
 
     useEffect(()=>{
-        callRequest(getId);
-    },[voteLoading])
+       callRequest(getId);
+    },[voteSuccess])
 
     
     function callRequest(id){
         dispatch(setViewPollLoading(id));
         dispatch(viewSinglePoll(id));
     }
-    console.log("dartaaa",data1);
-    if(loginStatus){
+    console.log("role",role);
+    if(loginStatus && role==="admin"){
     return(
         <div style={{margin:"8% 5% 5% 10%"}}>
             <Card>
@@ -178,6 +162,50 @@ export default function SinglePoll(props){
             </Card>
         </div>
     )}
+    else if(loginStatus && role==="guest"){
+    return(
+        <div style={{margin:"8% 5% 5% 10%"}}>
+            <Card>
+                <CardHeader titleTypographyProps={{variant:'h4'}}  
+                title={getTitleEditStatus?<TextField 
+                onKeyPress={(ev)=>{
+                    if(ev.key==="Enter" && ev.target.value!==""){
+                        setTitleEditStatus(false);
+                        editTitleRequest(ev);
+                    }
+                }} label={data1?.title}/>:data1?.title}>
+                </CardHeader>
+                <CardContent>
+                    <div style={{display:"flex",justifyContent:"space-between"}}>
+                        <Typography style={{marginLeft:"5%"}} variant="h4">options</Typography>
+                        <Typography variant="h5">Number of Votes</Typography>
+                    </div>
+                        {data1?.options?.map((element,index)=>{
+                            return(
+                                <div style={{display:"flex",justifyContent:"space-between",margin:"4%"}}>
+                                    <Typography style={{minWidth:"50%"}} variant="h5">{index+1}-{element.option}</Typography>
+                                    <Button onClick={()=>voteRequest(element.option)} style={{marginLeft:"20%",maxWidth:"20%"}} color="primary">Vote</Button>
+                                    <Typography variant="h5"> {element.vote}</Typography>
+                                </div>
+                                );
+                        })}
+                        {getEditStatus?<TextField 
+                            onKeyPress={(ev)=>{
+                                if(ev.key==="Enter" && ev.target.value!==""){
+                                    setEditStatus(false);
+                                    addNewPoll(ev);
+                                }
+                            }} style={{marginLeft:"3%"}} label="New Poll" variant="outlined" />:""}
+                    </CardContent>
+                    <CardActions style={{width:"100%"}}>
+                        <div style={{display:"flex",justifyContent:"space-between"}}>
+                            
+                        </div>
+                    </CardActions>
+            </Card>
+        </div>   
+    );
+    }
     else{
         return(
             <>

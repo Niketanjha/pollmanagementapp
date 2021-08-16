@@ -1,5 +1,6 @@
 import {takeLatest,call,put,select} from 'redux-saga/effects';
 import axios from 'axios';
+import jwt from 'jwt-decode';
 
 export function* watcherSaga(){
     yield takeLatest("LOGIN_REQUEST",loginWorkerSaga);
@@ -105,6 +106,7 @@ function *loginWorkerSaga(action){
         const response=yield call(loginFunction,action.payload);
         if(response.data.error===0){
             console.log(response);
+            console.log("token decoded",jwt(response.data.token));
             localStorage.setItem("token",response.data.token);
             yield put({type:"LOGIN_SUCCESS",payload:response.data});
         }
